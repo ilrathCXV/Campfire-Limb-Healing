@@ -1,0 +1,17 @@
+-- If you don't use MCM, change your defaults from here.
+local defaults = {
+	["limb_heal_interval"] = 30
+}
+
+function get_config(key)
+	if ui_mcm then return ui_mcm.get("limb_healing_campfire/"..key) else return defaults[key] end
+end
+
+function on_mcm_load()
+	op = { id= "limb_healing_campfire",sh=true ,gr={
+			{id = "limb_heal_interval",type = "input", val = 2, min = 2, max = 100, def = 30},
+		}
+	}
+
+	return op
+end

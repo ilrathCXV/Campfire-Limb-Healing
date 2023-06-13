@@ -1,0 +1,52 @@
+if zzz_player_injuries then end
+
+local time_g = 0
+local timer_regen = time_global()
+local cozy_limb_heal_interval = (limb_healing_campfire_mcm.get_config("limb_heal_interval") * 1000) or 2000	-- default from Frost: update every 2000ms/2sec
+local start_tracking = false
+
+local function SaveNewLimbHealth()
+	utils_obj.save_var(db.actor,"health.head",zzz_player_injuries.health.head)
+	utils_obj.save_var(db.actor,"health.torso",zzz_player_injuries.health.torso)
+	utils_obj.save_var(db.actor,"health.rightarm",zzz_player_injuries.health.rightarm)
+	utils_obj.save_var(db.actor,"health.leftarm",zzz_player_injuries.health.leftarm)
+	utils_obj.save_var(db.actor,"health.rightleg",zzz_player_injuries.health.rightleg)
+	utils_obj.save_var(db.actor,"health.leftleg",zzz_player_injuries.health.leftleg)
+end
+
+function get_nearby_lit_campfire(dist)
+	local pos = db.actor:position()
+	for id,binder in pairs(bind_campfire.campfires_all) do
+		if (binder and binder.campfire and binder.campfire:is_on()) then
+			if (pos:distance_to_sqr(binder.object:position()) <= dist) then
+				return true
+			end
+		end 
+	end 
+	return false
+end
+
+function actor_on_update()
+	time_g = time_global()
+
+    if get_nearby_lit_campfire(10.0) then
+		if not start_tracking then
+			timer_regen = time_global()
+			start_tracking = true
+		elseif ((time_g - timer_regen) > cozy_limb_heal_interval) then
+			if zzz_player_injuries.health.head~=zzz_player_injuries.maxhp.head 				then zzz_player_injuries.health.head=zzz_player_injuries.health.head+1 end
+			if zzz_player_injuries.health.torso~=zzz_player_injuries.maxhp.torso 			then zzz_player_injuries.health.torso=zzz_player_injuries.health.torso+1 end
+			if zzz_player_injuries.health.rightarm~=zzz_player_injuries.maxhp.rightarm 		then zzz_player_injuries.health.rightarm=zzz_player_injuries.health.rightarm+1 end
+			if zzz_player_injuries.health.leftarm~=zzz_player_injuries.maxhp.leftarm 		then zzz_player_injuries.health.leftarm=zzz_player_injuries.health.leftarm+1 end
+			if zzz_player_injuries.health.rightleg~=zzz_player_injuries.maxhp.rightleg		then zzz_player_injuries.health.rightleg=zzz_player_injuries.health.rightleg+1 end
+			if zzz_player_injuries.health.leftleg~=zzz_player_injuries.maxhp.leftleg 		then zzz_player_injuries.health.leftleg=zzz_player_injuries.health.leftleg+1 end
+			SaveNewLimbHealth()
+			timer_regen=time_global()
+			start_tracking = false
+		end
+    end
+end
+
+function on_game_start()
+	RegisterScriptCallback("actor_on_update",actor_on_update)
+end

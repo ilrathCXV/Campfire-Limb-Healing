@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="windows-1251"?>
+
+<!-- 
+	MCM
+-->
+<string_table>
+
+
+	<string id="ui_mcm_limb_healing_campfire_title">
+		<text>Campfires Heal Limbs</text>
+	</string>
+	<string id="ui_mcm_menu_limb_healing_campfire">
+		<text>Campfires Heal Limbs</text>
+	</string>
+
+	<string id="ui_mcm_limb_healing_campfire_limb_heal_interval">
+		<text>Time between heal (seconds)</text>
+	</string>
+	<string id="ui_mcm_limb_healing_campfire_limb_heal_interval_desc">
+		<text>The amount of time for a limb to heal by one tick (in seconds). Press ENTER after typing your desired value.</text>
+	</string>
+
+
+</string_table>
